@@ -1,0 +1,3 @@
+Source Han Serif SC 1.001 web subsets, derived from the user-provided Regular and SemiBold fonts.
+Copyright © 2017 Adobe Systems Incorporated. Original reserved font name: Source.
+Renamed to Ledger Serif SC. Distributed under SIL Open Font License 1.1; see OFL.txt.
