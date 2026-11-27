@@ -181,7 +181,7 @@
   }
   function sourceLabel(ids){return '资料 '+ids.map(id=>'['+id+']').join('、')+' · 网页下方可查看原文';}
   function renderSources(){
-    const holder=$('#sources-content');if(!holder)return;$('.sources-count').textContent=data.sources.length+' 项资料 / '+data.area.length+' 条年度记录';
+    const holder=$('#sources-content');if(!holder)return;
     holder.replaceChildren();
     const p=document.createElement('p');p.className='source-method';p.textContent='查证日期：2026 年 11 月 25 日。中间资金线与右侧柱图使用1835年7月7日补偿委员会公告的19个殖民地初始配额。圆面积和柱长与金额成正比；线长和纵向位置不表示年份。金额按万英镑保留一位。原表另列先令、便士，项目底层记录整英镑部分，因此整数和略低于名义总额2000万英镑。配额归当地奴隶主，不是付给殖民地政府或被奴役者的赔款，也不是最终实付。底部曲线独立使用1501—1866年的366条年度登船估计，法律地层为非等距时间轴。';holder.append(p);
     const list=document.createElement('ol');list.className='sources-list';
@@ -213,7 +213,31 @@
   document.addEventListener('keydown',e=>{if($('#editor').hidden)return;if(e.key==='Escape'){e.preventDefault();closeEditor();}if(e.key==='Tab'){const els=[...$('#editor').querySelectorAll('button,input,textarea,summary')].filter(el=>el.getClientRects().length);const first=els[0],last=els.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
   $('#content-form').addEventListener('submit',e=>{e.preventDefault();try{const next={...data,...JSON.parse($('#data-editor').value)};for(const key of ['title','subtitle','deck','intro','quote'])next[key]=e.target.elements[key].value.trim();data=validate(next);render();let saved=true;try{localStorage.setItem(storageKey,JSON.stringify(data));}catch{saved=false;}closeEditor();toast(saved?'内容已更新，并保存到当前浏览器':'内容已更新；当前浏览器无法保存，请导出 SVG 留存');}catch(error){$('#editor-error').textContent=error instanceof SyntaxError?'JSON 格式有误，请检查逗号和引号。':error.message;}});
   $('#reset-button').addEventListener('click',()=>{data=structuredClone(defaults);try{localStorage.removeItem(storageKey);}catch{}render();fillEditor();toast('已恢复考证版内容');});
-  $('#fit-button').addEventListener('click',()=>{const fit=$('#poster-stage').classList.toggle('fit');$('#fit-label').textContent=fit?'放大阅读':'整页预览';$('#fit-button').setAttribute('aria-pressed',String(fit));});
+  let viewMode='page',zoom=1;
+  const main=$('main'),poster=$('#poster'),stage=$('#poster-stage');
+  function availableWidth(){return Math.min(innerWidth>=1500?1250:1192,innerWidth)-(innerWidth<=700?24:76);}
+  function applyZoom(mode,value){
+    viewMode=mode;
+    if(mode==='page')zoom=Math.min(availableWidth()/768,Math.max(180,innerHeight-$('.toolbar').getBoundingClientRect().height-116)/1024);
+    else if(mode==='width')zoom=availableWidth()/768;
+    else zoom=Math.min(2,Math.max(.15,value));
+    const width=768*zoom,padding=innerWidth<=700?24:76;
+    poster.style.width=width+'px';stage.style.width=width+'px';
+    main.style.width=width>availableWidth()?width+padding+'px':'';
+    main.style.maxWidth=width>availableWidth()?'none':'';
+    $('#zoom-value').textContent=Math.round(zoom*100)+'%';
+    $('#fit-button').setAttribute('aria-pressed',String(mode==='page'));
+    $('#width-button').setAttribute('aria-pressed',String(mode==='width'));
+    $('#zoom-out').disabled=zoom<=.15;$('#zoom-in').disabled=zoom>=2;
+    $('#tooltip').hidden=true;
+  }
+  $('#zoom-out').onclick=()=>applyZoom('manual',Math.round((zoom-.1)*100)/100);
+  $('#zoom-in').onclick=()=>applyZoom('manual',Math.round((zoom+.1)*100)/100);
+  $('#zoom-reset').onclick=()=>applyZoom('manual',1);
+  $('#fit-button').onclick=()=>{applyZoom('page');window.scrollTo({top:0,left:0,behavior:'instant'});};
+  $('#width-button').onclick=()=>{applyZoom('width');window.scrollTo({top:0,left:0,behavior:'instant'});};
+  window.addEventListener('resize',()=>applyZoom(viewMode,zoom));
+  applyZoom('page');
   $('#export-button').addEventListener('click',()=>{const clone=$('.artwork').cloneNode(true);clone.classList.remove('has-focus');clone.querySelectorAll('.is-active').forEach(g=>g.classList.remove('is-active'));clone.setAttribute('width','1536');clone.setAttribute('height','2048');if(window.LEDGER_FONT_CSS){const style=document.createElementNS('http://www.w3.org/2000/svg','style');style.textContent=window.LEDGER_FONT_CSS;clone.querySelector('defs').prepend(style);}const blob=new Blob(['<?xml version="1.0" encoding="UTF-8"?>\n',new XMLSerializer().serializeToString(clone)],{type:'image/svg+xml;charset=utf-8'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='the-ledger.svg';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);toast('已导出可编辑的 SVG 矢量海报');});
   async function start(){
     $('#poster').textContent='正在载入思源宋体…';

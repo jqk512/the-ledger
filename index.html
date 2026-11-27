@@ -7,30 +7,29 @@
   <title>奴役的账本 — 被掠夺的生命，被继承的财富</title>
   <meta name="description" content="以中文呈现跨大西洋奴隶贸易、废奴历程与财富遗产，附 SlaveVoyages 年度估计及档案资料。">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Ctext%20x%3D%2232%22%20y%3D%2252%22%20text-anchor%3D%22middle%22%20font-family%3D%22Apple%20Color%20Emoji%2CSegoe%20UI%20Emoji%2CNoto%20Color%20Emoji%2Csans-serif%22%20font-size%3D%2252%22%3E%F0%9F%91%B6%F0%9F%8F%BF%3C%2Ftext%3E%3C%2Fsvg%3E">
-  <link rel="stylesheet" href="./style.css?v=serif-20261125-5">
-  <script src="./fonts/font-data.js?v=serif-20261125-5" defer></script>
-  <script src="./data.js?v=serif-20261125-5" defer></script>
-  <script src="./app.js?v=serif-20261125-5" defer></script>
+  <link rel="stylesheet" href="./style.css?v=zoom-clean-20261127">
+  <script src="./fonts/font-data.js?v=zoom-clean-20261127" defer></script>
+  <script src="./data.js?v=zoom-clean-20261127" defer></script>
+  <script src="./app.js?v=zoom-clean-20261127" defer></script>
 </head>
 <body>
   <header class="toolbar">
-    <a class="identity" href="./" aria-label="The Ledger 首页"><span class="identity-mark" role="img" aria-label="深肤色宝宝">👶🏿</span><span>THE LEDGER<span class="identity-sub">一份关于时间与遗产的视觉账本</span></span></a>
+    <a class="identity" href="./" aria-label="The Ledger 首页"><span class="identity-mark" role="img" aria-label="深肤色宝宝">👶🏿</span><span>THE LEDGER</span></a>
     <nav aria-label="海报工具">
-      <button id="fit-button" type="button" title="切换整页与阅读模式"><span class="tool-icon">⌗</span><span id="fit-label">整页预览</span></button>
+      <button id="fit-button" type="button" aria-pressed="true">整页预览</button><button id="width-button" type="button" aria-pressed="false">适应宽度</button>
       <span class="toolbar-divider"></span>
       <button id="edit-button" type="button"><span class="tool-icon">✎</span>替换内容</button>
       <button id="export-button" class="export-button" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8m-3-3 3 3 3-3M3 11v3h10v-3"/></svg>导出 SVG</button>
     </nav>
   </header>
   <main>
-    <div class="page-caption"><span>AN ATLAS OF MEMORY</span><span>交互式信息艺术 / VOL. 01</span></div>
     <div id="poster-stage" class="poster-stage"><div id="poster" class="poster" aria-label="历史账本信息艺术图表"></div></div>
-    <footer class="site-footer"><span><i></i>悬停图形查看说明与来源编号</span><span>中文考证稿 · 思源宋体排版</span></footer>
     <details id="research-notes" class="research-notes">
-      <summary><span>资料来源与统计口径</span><span class="sources-count">18 项资料 / 366 条年度记录</span></summary>
+      <summary><span>资料来源与统计口径</span></summary>
       <div id="sources-content"></div>
     </details>
   </main>
+  <div class="zoom-controls" role="group" aria-label="画面缩放"><button id="zoom-out" type="button" aria-label="缩小">−</button><button id="zoom-reset" type="button" aria-label="还原到百分之百" title="还原到100%"><output id="zoom-value" aria-live="polite">100%</output></button><button id="zoom-in" type="button" aria-label="放大">＋</button></div>
   <div id="tooltip" class="tooltip" role="status" hidden></div>
   <div id="editor-backdrop" class="editor-backdrop" hidden></div>
   <aside id="editor" class="editor" aria-labelledby="editor-title" aria-modal="true" role="dialog" hidden>
